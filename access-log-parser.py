@@ -4,6 +4,7 @@ from os import path
 import gzip
 import shutil
 
+from urlDict import calculator_paths
 
 def printKeys(result, key, value):
     print('{} matches: {}'.format(key, result.path.str.count(value).sum()))
@@ -13,23 +14,7 @@ def main():
     print('*** Main ***')
 
     working_dir = path.dirname(__file__)
-    data_dir = path.join(working_dir, 'auspost-logs')
-
-    # Dictionary containing the calcualtor name and path that identifies the landing page
-    # Volatility Index Retail, Advisor and Index are the same calculator but different landing pages depending on the URL
-    calculator_paths = {
-        # Calculator name : landing page to be counted from the log files
-        'Volatility Index Retail': 'GET /VolatilityIndexChart/ui/retail.html HTTP/1.1',
-        'Volatility Index': 'GET /VolatilityIndexChart/ui/app.html HTTP/2.0',
-        'Volatility Advisor': 'GET /VolatilityIndexChart/ui/advisor.html HTTP/2.0',
-        'Managed Fund Fee Index': 'GET /ManagedFundFee/ui/index.html HTTP/2.0',
-        'Currency Impact Fee Index': 'GET /static/currency-impact/index.html HTTP/2.0',
-        'ETF Fee Index': 'GET /ETFFee/ui/index.html HTTP/2.0',
-        'Asset Class': 'GET /static/asset-class/app.html HTTP/2.0',
-        # AUSPOST
-        #'AUSPOST': 'GET /auspost/ui/app.html HTTP/2.0',
-        'AUSPOST Results': 'POST /auspost/rest/getResults HTTP/2.0'
-    }
+    data_dir = path.join(working_dir, 'log-files')
 
     calc_paths_DF = pd.DataFrame(list(calculator_paths.items()), columns = ['calc', 'path'])
 
@@ -64,7 +49,7 @@ def main():
 
     filter_result = result.loc[(result['status'] == 200)]
     filter_result = pd.merge(filter_result, calc_paths_DF, on ='path')
-    filter_result.to_csv(path.join(working_dir, 'auspost-stats.csv'), sep=',')
+    filter_result.to_csv(path.join(working_dir, 'stats.csv'), sep=',')
     count = filter_result.groupby(['calc']).count()
     print(count)
 

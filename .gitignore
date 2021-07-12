@@ -1,5 +1,8 @@
 # Ignore contents
 log-files/*
+include-site-urls/*
+urlDict.py
 
 # Kepp directory structure
 !log-files/.gitkeep
+!include-site-urls/
