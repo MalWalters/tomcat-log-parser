@@ -1,0 +1,5 @@
+# Ignore contents
+log-files/*
+
+# Kepp directory structure
+!log-files/.gitkeep
